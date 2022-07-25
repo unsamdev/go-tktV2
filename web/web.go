@@ -3,7 +3,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fvk113/go-tkt/util"
+	"github.com/fvk113/go-tkt-convenios/util"
 	"net/http"
 	"strings"
 )

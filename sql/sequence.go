@@ -2,7 +2,7 @@ package sql
 
 import (
 	"database/sql"
-	"github.com/fvk113/go-tkt/util"
+	"github.com/fvk113/go-tkt-convenios/util"
 	_ "github.com/lib/pq"
 	"sync"
 )

@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"github.com/fvk113/go-tkt/sql"
+	"github.com/fvk113/go-tkt-convenios/sql"
 	"net/http"
 )
 
