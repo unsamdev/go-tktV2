@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"github.com/fvk113/go-tktV2/sql"
-	"github.com/fvk113/go-tktV2/util"
+	"github.com/fvk113/go-tkt/sql"
+	"github.com/fvk113/go-tkt/util"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"

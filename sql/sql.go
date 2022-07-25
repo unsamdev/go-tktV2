@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/fvk113/go-tktV2/util"
+	"github.com/fvk113/go-tkt/util"
 	_ "github.com/sijms/go-ora/v2"
 	"reflect"
 	"time"

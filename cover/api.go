@@ -2,7 +2,7 @@ package cover
 
 import (
 	"bytes"
-	"github.com/fvk113/go-tktV2/util"
+	"github.com/fvk113/go-tkt/util"
 	"io/ioutil"
 	"net/http"
 	"reflect"
