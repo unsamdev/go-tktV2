@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/unsamdev/go-tktV2/util"
+	"github.com/fvk113/go-tktV2/util"
+	_ "github.com/sijms/go-ora/v2"
 	"reflect"
 	"time"
-	_ "github.com/sijms/go-ora/v2"
 )
 
 var timeType = reflect.TypeOf(time.Time{})
