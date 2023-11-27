@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/fvk113/go-tkt-convenios/auth"
-	"github.com/fvk113/go-tkt-convenios/sql"
+	"github.com/unsamdev/go-tktV2/auth"
+	"github.com/unsamdev/go-tktV2/sql"
 	"net/http"
 )
 

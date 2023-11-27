@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/fvk113/go-tkt-convenios/util"
+	"github.com/unsamdev/go-tktV2/util"
 	"net/http"
 	"reflect"
 )
@@ -82,6 +82,23 @@ func (o *TxCtx) UpdateEntity(schema string, entity interface{}) int64 {
 	return o.ExecStructStmt(stmt, entity, 0)
 }
 
+func (o *TxCtx) UpdateEntityCustomId(schema string, idname string, entity interface{}) string {
+	objectType := reflect.TypeOf(entity)
+	name := objectType.Name()
+	key := schema + "." + name
+	stmt, ok := o.updMap[key]
+	if !ok {
+		idName := idname
+		sentence := "update " + schema + "." + objectType.Name() + " set " + ForUpdate(entity, 1, 2) +
+			" where " + idName + " = $1"
+		var err error
+		stmt, err = o.tx.Prepare(sentence)
+		util.CheckErr(err)
+		o.updMap[key] = stmt
+	}
+	return o.ExecStructStmtString(stmt, entity, 0)
+}
+
 func (o *TxCtx) resolveIdName(objectType reflect.Type) string {
 	idField, ok := objectType.FieldByName("Id")
 	if !ok {
@@ -116,6 +133,13 @@ func (o *TxCtx) ExecStruct(sql string, data interface{}, offset ...int) int64 {
 	return o.ExecStructStmt(stmt, data, offset...)
 }
 
+func (o *TxCtx) ExecStructStmtString(stmt *sql.Stmt, data interface{}, varOffset ...int) string {
+	//if len(varOffset) > 0 {
+	//	return ExecStructStmtOff(stmt, data, varOffset[0])
+	//} else {
+	return ExecStructStmtOffString(stmt, data, 0)
+	//}
+}
 func (o *TxCtx) ExecStructStmt(stmt *sql.Stmt, data interface{}, varOffset ...int) int64 {
 	if len(varOffset) > 0 {
 		return ExecStructStmtOff(stmt, data, varOffset[0])
@@ -126,7 +150,6 @@ func (o *TxCtx) ExecStructStmt(stmt *sql.Stmt, data interface{}, varOffset ...in
 
 func (o *TxCtx) ExecSql(sql string, args ...interface{}) *sql.Result {
 	stmt := o.resolveStmt(sql)
-	fmt.Println(sql)
 	return ExecStmt(stmt, args...)
 }
 
@@ -197,20 +220,15 @@ func InterceptReadOnlyTransactional(databaseConfig *DatabaseConfig, delegate fun
 	return func(w http.ResponseWriter, r *http.Request) {
 		db := OpenDB(*databaseConfig)
 		defer CloseDB(db)
-		////txOptions := sql.TxOptions{ReadOnly: true}
-		//tx, err := db.BeginTx(context.Background(), &txOptions)
-		//if err != nil {
-		//	panic(err)
-		//}
-		////defer RollbackOnPanic(tx)
 		tx, err := db.Begin()
 		if err != nil {
 			panic(err)
 		}
+		defer RollbackOnPanic(tx)
 		txCtx := NewTxCtx(*databaseConfig, tx, db)
 		ctx := context.WithValue(r.Context(), "txCtx", txCtx)
 		delegate(txCtx, w, r.WithContext(ctx))
-		////util.CheckErr(tx.Commit())
+		util.CheckErr(tx.Commit())
 		if txCtx.future != nil {
 			for _, f := range txCtx.future {
 				f()

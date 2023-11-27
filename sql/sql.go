@@ -5,8 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/fvk113/go-tkt-convenios/util"
-	_ "github.com/sijms/go-ora/v2"
+	"github.com/unsamdev/go-tktV2/util"
 	"reflect"
 	"time"
 )
@@ -264,6 +263,16 @@ func ExecStructStmt(stmt *sql.Stmt, data interface{}) int64 {
 	return ExecStructStmtOff(stmt, data, 0)
 }
 
+func ExecStructStmtOffString(stmt *sql.Stmt, data interface{}, offset int) string {
+	objectType := reflect.TypeOf(data)
+	fields := listStructFields(objectType, offset)
+	buffer := make([]interface{}, len(fields))
+	value := reflect.ValueOf(data)
+	fieldsToBuffer(value, buffer, offset)
+	_, err := stmt.Exec(buffer...)
+	util.CheckErr(err)
+	return "ok"
+}
 func ExecStructStmtOff(stmt *sql.Stmt, data interface{}, offset int) int64 {
 	objectType := reflect.TypeOf(data)
 	fields := listStructFields(objectType, offset)

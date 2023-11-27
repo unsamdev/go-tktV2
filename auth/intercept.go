@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"github.com/fvk113/go-tkt-convenios/sql"
+	"github.com/unsamdev/go-tktV2/sql"
 	"net/http"
 )
 
@@ -12,7 +12,7 @@ func Auditable(delegate func(txCtx *sql.TxCtx, w http.ResponseWriter, r *http.Re
 		if tokenEntry != nil {
 			txCtx.ExecSql(fmt.Sprintf("set local tkt.user_name to '%d';", tokenEntry.(*TokenEntry).UserId))
 		}
-		txCtx.ExecSql(fmt.Sprintf("set local tkt.context to '%s';", r.URL.Path))
+		txCtx.ExecSql(fmt.Sprintf("set local tkt.context to '" + r.URL.Path + "';"))
 		delegate(txCtx, w, r)
 	}
 }

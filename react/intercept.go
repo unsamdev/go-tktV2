@@ -1,7 +1,7 @@
 package react
 
 import (
-	"github.com/fvk113/go-tkt-convenios/util"
+	"github.com/unsamdev/go-tktV2/util"
 	"io/ioutil"
 	"net/http"
 )
