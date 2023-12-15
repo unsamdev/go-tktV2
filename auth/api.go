@@ -61,23 +61,23 @@ func (o *Api) CreateToken(data Token) *Token {
 }
 
 func (o *Api) UpdateTokenTime(id int64, expirationTime time.Time, lastTime time.Time) {
-	o.txCtx.ExecSql("update token set expirationtime = $2, lasttime = $3 where id = $1", id, expirationTime, lastTime)
+	o.txCtx.ExecSql("update auth.token set expirationtime = $2, lasttime = $3 where id = $1", id, expirationTime, lastTime)
 }
 
 func (o *Api) RemoveToken(id int64) {
-	o.txCtx.ExecSql("delete from token where id = $1", id)
+	o.txCtx.ExecSql("delete from auth.token where id = $1", id)
 }
 
 func (o *Api) FindTokenByValue(value string) *Token {
-	return o.txCtx.FindStruct(Token{}, `select * from token where value = $1`, value).(*Token)
+	return o.txCtx.FindStruct(Token{}, `select * from auth.token where value = $1`, value).(*Token)
 }
 
 func (o *Api) ListUnexpiredToken() []Token {
-	return o.txCtx.QueryStruct(Token{}, `select * from token where expirationtime > now()`).([]Token)
+	return o.txCtx.QueryStruct(Token{}, `select * from auth.token where expirationtime > now()`).([]Token)
 }
 
 func (o *Api) RemoveExpiredToken() {
-	o.txCtx.ExecSql("delete from token where expirationtime <= now()")
+	o.txCtx.ExecSql("delete from auth.token where expirationtime <= now()")
 }
 func (o *Api) DeleteUsuario(id string) {
 	o.txCtx.ExecSql("delete from account where usuario_id = $1", id)
